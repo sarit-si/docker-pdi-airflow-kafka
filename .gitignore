@@ -1,0 +1,11 @@
+.DS_Store
+.vscode/
+__pychache__
+docker/airflow/logs
+docker/pentaho/logs
+docker/pentaho/.kettle
+.meta
+# jdbc.properties --> uncomment this for non-demo usage.
+.env
+*.code-workspace
+*.pyc

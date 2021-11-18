@@ -1,0 +1,205 @@
+version: '3'
+x-airflow-common:
+  &airflow-common
+  build: ./docker/airflow
+  image: airflow
+  environment:
+    &airflow-common-env
+    AIRFLOW_UID: ${AIRFLOW_UID}
+    AIRFLOW_GID: ${AIRFLOW_GID}
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-database/airflow
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@airflow-database/airflow
+    AIRFLOW__CELERY__BROKER_URL: redis://:@airflow-broker:6379/0
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__ENABLE__XCOM_PICKLING: 'true'
+    AIRFLOW_VAR_DEMO_TOPIC_NAME: ${AIRFLOW_VAR_DEMO_TOPIC_NAME}
+    AIRFLOW_VAR_DEMO_TOPIC_CONSUMERS: ${AIRFLOW_VAR_DEMO_TOPIC_CONSUMERS}
+    BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+    HOST_ENV: ${HOST_ENV}
+    HOST_PDI_SRC_PATH: ${HOST_PDI_SRC_PATH}
+    HOST_PDI_KET_PATH: ${HOST_PDI_KET_PATH}
+    HOST_PDI_JND_PATH: ${HOST_PDI_JND_PATH}
+    HOST_PDI_LOG_PATH: ${HOST_PDI_LOG_PATH}
+    HOST_PDI_PLG_PATH: ${HOST_PDI_PLG_PATH}
+    PENTAHO_DI_JAVA_OPTIONS: ${PENTAHO_DI_JAVA_OPTIONS}
+  volumes:
+    - ./src/dags:/opt/airflow/dags
+    - ./docker/airflow/plugins:/opt/airflow/plugins
+    - ./docker/airflow/logs:/opt/airflow/logs
+    - ./docker/airflow/airflow.cfg:/opt/airflow/airflow.cfg
+    - "/var/run/docker.sock:/var/run/docker.sock"
+  user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
+  depends_on:
+    airflow-broker:
+      condition: service_healthy
+    airflow-database:
+      condition: service_healthy
+
+services:
+# Airflow-DB
+  airflow-database:
+    image: postgres:13
+    container_name: airflow-database
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+# Airflow-messenger
+  airflow-broker:
+    image: redis:latest
+    container_name: airflow-broker
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
+
+# Airflow-webserver
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    command: webserver
+    ports:
+      - ${AIRFLOW_HOST_PORT:-8080}:8080
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:${AIRFLOW_HOST_PORT:-8080}/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+# Airflow-scheduler
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    command: scheduler
+    restart: always
+
+# Airflow-workers
+  airflow-worker:
+    <<: *airflow-common
+    command: celery worker
+    restart: always
+
+# Airflow-DB-initialize
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init
+    command: version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${AIRFLOW_ADMIN_USER:-airflow}
+      _AIRFLOW_WWW_USER_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:-airflow}
+      _AIRFLOW_WWW_USER_EMAIL: ${AIRFLOW_ADMIN_EMAIL:-admin@admin.com}
+
+# Zookeeper
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.2.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_AUTOPURGE_PURGEINTERVAL: 1
+    volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
+
+# Kafka Broker
+  kafka-broker:
+    image: confluentinc/cp-kafka:6.2.1
+    container_name: kafka-broker
+    ports:
+      - "9091:9091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_EXTERNAL:PLAINTEXT, LISTENER_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_EXTERNAL://localhost:9091, LISTENER_INTERNAL://kafka-broker:19091
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    depends_on:
+      - "zookeeper"
+
+# Kafka Topic Setup (a workaround to auto create a topic)
+# Credit: https://github.com/confluentinc/examples/blob/5.1.1-post/microservices-orders/docker-compose.yml#L182-L215
+  kafka-setup:
+    image: confluentinc/cp-kafka:6.2.1
+    container_name: kafka-setup
+    command: "bash -c 'echo Creating topic... && \
+              cub kafka-ready -b kafka-broker:19091 1 20 && \
+              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 \
+              --partitions ${DEMO_TOPIC_PARTITIONS} \
+              --replication-factor 1 \
+              --topic ${DEMO_TOPIC_NAME} && \
+              echo Topic ${DEMO_TOPIC_NAME} ready for use'"
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+      DEMO_TOPIC_NAME: ${DEMO_TOPIC_NAME}
+      DEMO_TOPIC_PARTITIONS: ${DEMO_TOPIC_PARTITIONS}
+    depends_on:
+      - "zookeeper"
+      - "kafka-broker"
+
+  # KafDrop
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: kafdrop
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: kafka-broker:19091
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    restart: "no"
+    depends_on:
+      - "kafka-broker"
+
+  # PostGres
+  employeedb:
+    image: postgres:13
+    container_name: employeedb
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: changeme
+    volumes:
+      - ./docker/postgres:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  postgres-db-volume:
+
+networks:
+  default:
+    name: "myapp"
