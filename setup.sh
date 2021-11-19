@@ -41,7 +41,6 @@ mkdir -p \
 ./docker/airflow/logs \
 ./docker/airflow/plugins \
 ./docker/pentaho/logs \
-./docker/pentaho/plugins \
 ./docker/pentaho/simple-jndi \
 ./docker/pentaho/.kettle
 
@@ -70,7 +69,6 @@ HOST_PDI_SRC_PATH=$PWD/src/ktr\n\
 HOST_PDI_KET_PATH=$PWD/docker/pentaho/.kettle\n\
 HOST_PDI_JND_PATH=$PWD/docker/pentaho/simple-jndi\n\
 HOST_PDI_LOG_PATH=$PWD/docker/pentaho/logs\n\
-HOST_PDI_PLG_PATH=$PWD/docker/pentaho/plugins\n\
 PENTAHO_UID=$(id -u)\n\
 PENTAHO_GID=0\n\
 PENTAHO_DI_JAVA_OPTIONS=\"$PENTAHO_DI_JAVA_OPTIONS\"\n\
