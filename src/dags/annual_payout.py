@@ -8,6 +8,8 @@ from airflow.providers.docker.operators.docker import DockerOperator
 
 from utils.mounts import PDIMount
 
+# Get the AIRFLOW_VAR_DEMO_TOPIC_NAME and AIRFLOW_VAR_DEMO_TOPIC_CONSUMER env variables
+# These 2 will decide the number of CONSUMER tasks to spawn on start up
 TOPIC = Variable.get('DEMO_TOPIC_NAME')
 PARTITIONS = int(Variable.get('DEMO_TOPIC_CONSUMERS'))
 
@@ -25,6 +27,7 @@ with DAG('Annual_Payout', default_args=args, schedule_interval=None) as dag:
         task_id='Start'
     )
 
+    # Spawn a PDI container to run the producer.ktr transformation for pushing messages to Kafka
     producer = DockerOperator(
         task_id='Producer',
         command='pan.sh -file:/home/pentaho/pdi/producer.ktr \
@@ -45,6 +48,8 @@ with DAG('Annual_Payout', default_args=args, schedule_interval=None) as dag:
         mounts=PDIMount().MOUNTS
     )
 
+    # Get a list of consumer tasks. Each task will spawn a PDI container and run the consumer.ktr inside it
+    # The number of such consumer containers depends on the DEMO_TOPIC_CONSUMERS value.
     consumers = [
 
         DockerOperator(
