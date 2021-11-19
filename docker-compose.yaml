@@ -23,13 +23,11 @@ x-airflow-common:
     HOST_PDI_KET_PATH: ${HOST_PDI_KET_PATH}
     HOST_PDI_JND_PATH: ${HOST_PDI_JND_PATH}
     HOST_PDI_LOG_PATH: ${HOST_PDI_LOG_PATH}
-    HOST_PDI_PLG_PATH: ${HOST_PDI_PLG_PATH}
     PENTAHO_DI_JAVA_OPTIONS: ${PENTAHO_DI_JAVA_OPTIONS}
   volumes:
     - ./src/dags:/opt/airflow/dags
     - ./docker/airflow/plugins:/opt/airflow/plugins
     - ./docker/airflow/logs:/opt/airflow/logs
-    - ./docker/airflow/airflow.cfg:/opt/airflow/airflow.cfg
     - "/var/run/docker.sock:/var/run/docker.sock"
   user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
   depends_on:
@@ -193,6 +191,7 @@ services:
 
   adminer:
     image: adminer
+    container_name: adminer
     restart: always
     ports:
       - 8081:8080
