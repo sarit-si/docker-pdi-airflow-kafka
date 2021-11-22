@@ -8,13 +8,16 @@ _producer.ktr_ file uses the built-in pentaho _Kafka Producer_ design component 
 3. Commit offsets only after they are successfully processed and inserted into database.
 4. Added flexibility of Python for future customizations to the consumer.
 
+# Architecture
+![Architecture](./docker-PAK.jpg)
+
 
 **Process flow:**
 - TWO pdi transformation _.ktr_ files have been used. One serving as the _producer_ and the other as _consumer_.
 - The _producer_ file gets the input data, builds the _key-message_ pair and sends to Kafka topic.
 - The _consumer_ transformation reads each message offset from the Kafka topic, processes them before loading into PostgresDb.
 - Both the _producer_ and _consumer_ transformations triggerred from Airflow via _DockerOperator_.
-
+- Source code files like KTRs and DAGs are rather mounted from host to docker. This removes the requirement of re-building the docker images in case of a code change.
 
 # Pre-requisites
 - [Docker Engine](https://docs.docker.com/engine/install/) version: 20.10.6+
