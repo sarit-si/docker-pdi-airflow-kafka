@@ -2,37 +2,37 @@
 <transformation>
   <info>
     <name>consumer</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
       <parameter>
         <name>group_id</name>
-        <default_value />
-        <description />
+        <default_value/>
+        <description/>
       </parameter>
       <parameter>
         <name>partition</name>
-        <default_value />
-        <description />
+        <default_value/>
+        <description/>
       </parameter>
       <parameter>
         <name>topic</name>
-        <default_value />
-        <description />
+        <default_value/>
+        <description/>
       </parameter>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -57,37 +57,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -141,11 +141,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -223,10 +223,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -289,10 +289,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -365,10 +365,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -417,9 +417,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -430,7 +430,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -453,16 +453,16 @@
   </notepads>
   <connection>
     <name>employeedb</name>
-    <server />
+    <server/>
     <type>POSTGRESQL</type>
     <access>JNDI</access>
     <database>employeedb</database>
     <port>1521</port>
-    <username />
+    <username/>
     <password>Encrypted </password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -545,11 +545,6 @@
     </hop>
     <hop>
       <from>Insert / update</from>
-      <to>Error log</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Insert / update</from>
       <to>Select offset column</to>
       <enabled>Y</enabled>
     </hop>
@@ -557,13 +552,13 @@
   <step>
     <name>Calculate commission</name>
     <type>Calculator</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <failIfNoFile>Y</failIfNoFile>
     <calculation>
@@ -571,14 +566,14 @@
       <calc_type>MULTIPLY</calc_type>
       <field_a>bonus_percent</field_a>
       <field_b>salary</field_b>
-      <field_c />
+      <field_c/>
       <value_type>Integer</value_type>
       <value_length>-1</value_length>
       <value_precision>0</value_precision>
       <remove>N</remove>
-      <conversion_mask />
-      <decimal_symbol />
-      <grouping_symbol />
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
       <currency_symbol>$</currency_symbol>
     </calculation>
     <calculation>
@@ -586,18 +581,18 @@
       <calc_type>ADD</calc_type>
       <field_a>bonus_amount</field_a>
       <field_b>salary</field_b>
-      <field_c />
+      <field_c/>
       <value_type>Integer</value_type>
       <value_length>-1</value_length>
       <value_precision>-1</value_precision>
       <remove>N</remove>
-      <conversion_mask />
-      <decimal_symbol />
-      <grouping_symbol />
-      <currency_symbol />
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
     </calculation>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -613,18 +608,18 @@
   <step>
     <name>Commit offsets</name>
     <type>CPythonScriptExecutor</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <rows_to_process>Row by Row</rows_to_process>
-    <rows_to_process_size />
+    <rows_to_process_size/>
     <reservoir_sampling>N</reservoir_sampling>
-    <reservoir_sampling_size />
+    <reservoir_sampling_size/>
     <reservoir_sampling_seed>1</reservoir_sampling_seed>
     <include_input_as_output>N</include_input_as_output>
     <py_script># Python Kafka Consumer
@@ -656,7 +651,7 @@ for record in consumer:
     consumer.commit()
     break</py_script>
     <load_script_at_runtime>N</load_script_at_runtime>
-    <script_to_load />
+    <script_to_load/>
     <continue_on_unset_vars>N</continue_on_unset_vars>
     <py_vars_to_get>OFFSET</py_vars_to_get>
     <include_frame_row_index>N</include_frame_row_index>
@@ -672,8 +667,8 @@ for record in consumer:
         <type>Integer</type>
       </output_field>
     </output_fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -687,79 +682,20 @@ for record in consumer:
     </GUI>
   </step>
   <step>
-    <name>Error log</name>
-    <type>WriteToLog</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <loglevel>log_level_error</loglevel>
-    <displayHeader>Y</displayHeader>
-    <limitRows>N</limitRows>
-    <limitRowsNumber>0</limitRowsNumber>
-    <logmessage />
-    <fields>
-      <field>
-        <name>error_info</name>
-      </field>
-      <field>
-        <name>offset</name>
-      </field>
-      <field>
-        <name>empid</name>
-      </field>
-      <field>
-        <name>name</name>
-      </field>
-      <field>
-        <name>salary</name>
-      </field>
-      <field>
-        <name>year</name>
-      </field>
-      <field>
-        <name>bonus_percent</name>
-      </field>
-      <field>
-        <name>bonus_amount</name>
-      </field>
-      <field>
-        <name>total_salary</name>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>992</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Fetch Kafka batch</name>
     <type>CPythonScriptExecutor</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <rows_to_process>ALL</rows_to_process>
-    <rows_to_process_size />
+    <rows_to_process_size/>
     <reservoir_sampling>N</reservoir_sampling>
-    <reservoir_sampling_size />
+    <reservoir_sampling_size/>
     <reservoir_sampling_seed>1</reservoir_sampling_seed>
     <include_input_as_output>N</include_input_as_output>
     <py_script># Python Kafka Consumer
@@ -790,7 +726,7 @@ for record in consumer:
 
 messages = ";".join(message_values)</py_script>
     <load_script_at_runtime>N</load_script_at_runtime>
-    <script_to_load />
+    <script_to_load/>
     <continue_on_unset_vars>N</continue_on_unset_vars>
     <py_vars_to_get>messages</py_vars_to_get>
     <include_frame_row_index>N</include_frame_row_index>
@@ -804,8 +740,8 @@ messages = ";".join(message_values)</py_script>
         <type>String</type>
       </output_field>
     </output_fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -821,13 +757,13 @@ messages = ";".join(message_values)</py_script>
   <step>
     <name>Generate random %age</name>
     <type>RandomValue</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -835,8 +771,8 @@ messages = ";".join(message_values)</py_script>
         <type>random number</type>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -852,16 +788,16 @@ messages = ";".join(message_values)</py_script>
   <step>
     <name>Insert / update</name>
     <type>InsertUpdate</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>employeedb</connection>
-    <commit>100</commit>
+    <commit>0</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema>public</schema>
@@ -870,13 +806,13 @@ messages = ";".join(message_values)</py_script>
         <name>empid</name>
         <field>empid</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>year</name>
         <field>year</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <value>
         <name>empid</name>
@@ -914,8 +850,8 @@ messages = ";".join(message_values)</py_script>
         <update>Y</update>
       </value>
     </lookup>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -931,13 +867,13 @@ messages = ";".join(message_values)</py_script>
   <step>
     <name>Log</name>
     <type>WriteToLog</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <loglevel>log_level_basic</loglevel>
     <displayHeader>Y</displayHeader>
@@ -951,8 +887,8 @@ Parition = ${partition}</logmessage>
         <name>Message</name>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -968,13 +904,13 @@ Parition = ${partition}</logmessage>
   <step>
     <name>Select offset column</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -982,8 +918,8 @@ Parition = ${partition}</logmessage>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -999,13 +935,13 @@ Parition = ${partition}</logmessage>
   <step>
     <name>Select values</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -1013,8 +949,8 @@ Parition = ${partition}</logmessage>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1030,23 +966,23 @@ Parition = ${partition}</logmessage>
   <step>
     <name>Split field to rows by message</name>
     <type>SplitFieldToRows3</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <splitfield>messages</splitfield>
     <delimiter>;</delimiter>
     <newfield>Message</newfield>
     <rownum>N</rownum>
-    <rownum_field />
+    <rownum_field/>
     <resetrownumber>Y</resetrownumber>
     <delimiter_is_regex>N</delimiter_is_regex>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1062,96 +998,96 @@ Parition = ${partition}</logmessage>
   <step>
     <name>Split message row to columns</name>
     <type>FieldSplitter</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <splitfield>Message</splitfield>
     <delimiter>|</delimiter>
-    <enclosure />
+    <enclosure/>
     <fields>
       <field>
         <name>offset</name>
-        <id />
+        <id/>
         <idrem>N</idrem>
         <type>Integer</type>
-        <format />
-        <group />
-        <decimal />
-        <currency />
+        <format/>
+        <group/>
+        <decimal/>
+        <currency/>
         <length>-1</length>
         <precision>-1</precision>
-        <nullif />
-        <ifnull />
+        <nullif/>
+        <ifnull/>
         <trimtype>none</trimtype>
       </field>
       <field>
         <name>empid</name>
-        <id />
+        <id/>
         <idrem>N</idrem>
         <type>String</type>
-        <format />
-        <group />
-        <decimal />
-        <currency />
+        <format/>
+        <group/>
+        <decimal/>
+        <currency/>
         <length>-1</length>
         <precision>-1</precision>
-        <nullif />
-        <ifnull />
+        <nullif/>
+        <ifnull/>
         <trimtype>none</trimtype>
       </field>
       <field>
         <name>name</name>
-        <id />
+        <id/>
         <idrem>N</idrem>
         <type>String</type>
-        <format />
-        <group />
-        <decimal />
-        <currency />
+        <format/>
+        <group/>
+        <decimal/>
+        <currency/>
         <length>-1</length>
         <precision>-1</precision>
-        <nullif />
-        <ifnull />
+        <nullif/>
+        <ifnull/>
         <trimtype>none</trimtype>
       </field>
       <field>
         <name>salary</name>
-        <id />
+        <id/>
         <idrem>N</idrem>
         <type>Integer</type>
-        <format />
-        <group />
-        <decimal />
-        <currency />
+        <format/>
+        <group/>
+        <decimal/>
+        <currency/>
         <length>-1</length>
         <precision>-1</precision>
-        <nullif />
-        <ifnull />
+        <nullif/>
+        <ifnull/>
         <trimtype>none</trimtype>
       </field>
       <field>
         <name>year</name>
-        <id />
+        <id/>
         <idrem>N</idrem>
         <type>Integer</type>
-        <format />
-        <group />
-        <decimal />
-        <currency />
+        <format/>
+        <group/>
+        <decimal/>
+        <currency/>
         <length>-1</length>
         <precision>-1</precision>
-        <nullif />
-        <ifnull />
+        <nullif/>
+        <ifnull/>
         <trimtype>none</trimtype>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1168,18 +1104,18 @@ Parition = ${partition}</logmessage>
     <error>
       <source_step>Insert / update</source_step>
       <target_step>Error log</target_step>
-      <is_enabled>Y</is_enabled>
-      <nr_valuename />
+      <is_enabled>N</is_enabled>
+      <nr_valuename/>
       <descriptions_valuename>error_info</descriptions_valuename>
-      <fields_valuename />
-      <codes_valuename />
-      <max_errors />
-      <max_pct_errors />
-      <min_pct_rows />
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
     </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>
